@@ -47,7 +47,8 @@ An argument that is a function returns itself."
                                 (str "The following value is not a function: " f))))
                         ]
                     (fn [hm]
-                      (assoc hm kw2 (apply f (hm kw1) args))))
+                      (assoc hm kw2 (apply f (hm kw1)
+                                           (map #(if (keyword? %) (hm %) %) args)))))
     
     (map? arg) (let [_ (when-not (every? keyword? (keys arg))
                          (throw (Exception. "Every key in transformer map must be a keyword.")))
@@ -109,9 +110,11 @@ An argument that is a function returns itself."
                ;; _ (println "res: " res)
                 
                 ;; Execute the filters!
+               _ (println "Beginning filter execution!")
                 newres (map (fn [r]
                               ;;(println "received r!" r)
                               (reduce #(%2 %1) r filters)) res)
+                _ (println "received result: " newres)
                 
                 ;;_ (println "filters: " filters)
                 ;;_ (println "newres: " newres)

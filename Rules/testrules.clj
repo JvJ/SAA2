@@ -4,6 +4,8 @@
 (defrel 'smack [:INST :TARG])
 (defrel 'anger [:SELF :VAL])
 
+;;; Test git commit comment!
+
 (defrule
   'getsmacked
   (rel 'smack {:INST :X :TARG :Y})
