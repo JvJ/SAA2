@@ -17,8 +17,6 @@
   "Get the class of a java array for later use."
   (class (into-array Object [])))
 
-;; TODO: Add ID's
-
 (def ^:dynamic *relations*
   "This is a mapping of predicate names to mappings of argument names to positions.
 Predicate names are represented as symbols.
@@ -59,6 +57,8 @@ Clojure terms are just lists (and lists of lists).
 Symbols map to atoms, and keywords map to variables."
   [val]
   (cond
+    ;; If it is a function, executerize it!
+    (fn? val) (clj-term (val))
     ;; First of all, if an element is a sequence, it is another term.
     (seq? val) (cond (empty? val) (throw (Exception. "Empty sequence not allowed!"))
                      :else (Compound. (convert-symbol (first val))
@@ -171,10 +171,17 @@ Symbols map to atoms, and keywords map to variables."
   "Modify a relation that satisfies a predicate."
   [rl propmap-1 propmap-2]
   (let [merged (merge propmap-1 propmap-2)
+<<<<<<< HEAD
         ;;missing (c
+=======
+        fields (set (:unfields (@*relations* rl)))
+        missing (difference fields (set (keys merged)))
+        missing-vars (into {} (for [x missing]
+                                [x (keyword (gensym))]))
+>>>>>>> 0bb02484ab0952b4bdc9a1af41a4e23104dfe309
         compt (compose
-                (retract-rel rl propmap-1)
-                (assert-rel rl (merge propmap-1 propmap-2)))]
+                (retract-rel rl (merge propmap-1 missing-vars))
+                (assert-rel rl (merge merged missing-vars)))]
     (with-meta
       compt
       (assoc (meta compt) :modified #{{:relation rl
