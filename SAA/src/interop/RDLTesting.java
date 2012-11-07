@@ -9,18 +9,19 @@ public class RDLTesting {
 	 */
 	
 	public static void main(String[] args) {
-		class goal{
+	/*	class goal{
 			
 			public double desire;
-		}
+		}*/
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
 		rdl.loadFile("testrules.clj");
 		
-		goal test=new goal();
-		Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
-		
-		Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
+		//goal test=new goal();
+		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
+		IPersistentMap[] results;
+		Relation agent = rdl.defRel("agent", "SELF");
+		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
 		
 		Relation goalmain=rdl.defRel("goalmain","GOAL", "SATISMAIN" ,"DECAYRATE");
 		
@@ -28,9 +29,9 @@ public class RDLTesting {
 		
 		Relation desire=rdl.defRel("desire", "GOAL" ,"AGENT" ,"VALUE");
 		Relation agentgoal=rdl.defRel("agentgoal","GOAL", "AGENT" ,"STATE");
-		Relation agent = rdl.defRel("agent", "SELF");
 		
-		IPersistentMap[] results;
+		
+		
 		results = rdl.query(
 			agent.assertRel("SELF","jacky"),
 			agentgoal.assertRel("GOAL","money","AGENT","jacky","STATE",20),
@@ -77,10 +78,12 @@ public class RDLTesting {
 		System.out.println("Results from************************ ");
 		System.out.println(test.desire);
 		System.out.println("Keyword test: "+ rdl.trans(":X", ":Y", "+", 0.1));
-		
+		*/
 		//PersistentVector v = new PersistentVector
 		
 		// Define a relation with appropriate fields
+		
+		/*
 		Relation mother = rdl.defRel("mother", "SELF", "CHILD");
 		
 		Relation grandmother = rdl.defRel("grandmother", "SELF", "GCHILD");
@@ -255,7 +258,7 @@ public class RDLTesting {
 			System.out.println(m);
 			//m.
 		}
-		
+		*/
 	}
 
 }
