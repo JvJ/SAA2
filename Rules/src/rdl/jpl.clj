@@ -170,9 +170,8 @@ Symbols map to atoms, and keywords map to variables."
 (defn mod-rels
   "Modify a relation that satisfies a predicate."
   [rl propmap-1 propmap-2]
-  (let [;; We need to introduce something to ensure blank values don't get asserted
-        ;; TODO: THIS IS A BUG!!! It must be addressed!
-        ;;propmap-defaults 
+  (let [merged (merge propmap-1 propmap-2)
+        missing (c
         compt (compose
                 (retract-rel rl propmap-1)
                 (assert-rel rl (merge propmap-1 propmap-2)))]
