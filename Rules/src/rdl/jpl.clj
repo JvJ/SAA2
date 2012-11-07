@@ -171,7 +171,7 @@ Symbols map to atoms, and keywords map to variables."
   "Modify a relation that satisfies a predicate."
   [rl propmap-1 propmap-2]
   (let [merged (merge propmap-1 propmap-2)
-        missing (c
+        ;;missing (c
         compt (compose
                 (retract-rel rl propmap-1)
                 (assert-rel rl (merge propmap-1 propmap-2)))]

@@ -7,13 +7,17 @@ public class RDLTesting {
 	/**
 	 * @param args
 	 */
+	
 	public static void main(String[] args) {
-		
+		class goal{
+			
+			public double desire;
+		}
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
 		rdl.loadFile("testrules.clj");
 		
-		
+		goal test=new goal();
 		Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
 		
 		Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
@@ -56,35 +60,22 @@ public class RDLTesting {
 			System.out.println(m);
 		}
 		
-		Rule test = rdl.defRule(
-				"test",
-				agent.term("SELF", ":X"),
-				agentgoal.term("GOAL",":G","AGENT",":X","STATE",":S"),
-				goalsatistank.term("AGENT",":X","GOAL",":G","VALUESATIS",":V"),
-				goalweight.term("AGENT",":X","GOAL",":G","WEIGHT",":W"),
-				desire.term("GOAL",":G","AGENT",":X","VALUE",":C"),
-				":==>",
-				// We've introduced a transformer, which goes from :V to :V2
-				// The action taken is to add 0.1
-				//rdl.trans(":V", ":V2", trans, 0.1),
-				//rdl.trans(":H", ":H", "(fn [x & r] (println \"HEY!\") x)"),
-			//	":==>",
-				// The effect of the rule is to modify the relation
-			    desire.modRel("GOAL",":G","AGENT",":X","VALUE",100.1)
-	
-	);
-		rdl.updateHead();
+			rdl.updateHead();
 		rdl.updateTail();
 		results = rdl.query(
 		        desire.term("GOAL",":G","AGENT",":X","VALUE",":C")
 				
 				);
+
 		
 		System.out.println("Results from??????????????????: ");
 		for (IPersistentMap m : results){
 			
 			System.out.println(m);
+			test.desire=( long)m.valAt(rdl.var("C"));
 		}
+		System.out.println("Results from************************ ");
+		System.out.println(test.desire);
 		System.out.println("Keyword test: "+ rdl.trans(":X", ":Y", "+", 0.1));
 		
 		// Define a relation with appropriate fields

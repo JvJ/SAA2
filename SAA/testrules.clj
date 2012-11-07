@@ -32,9 +32,12 @@
   :==>
   ;;modify vx=(vs-s)*w
   ;;{:VX1 (fn [m] (* (- (m :VS) (m :S)) (m :W)) )}
-  [[:VX :V1] + 100.0]
-  :==>  
-   (mod-rels 'desire {:GOAL :G :AGENT :A :VALUE :VX} {:VALUE  :V1})
+  [[:VS :V1]- :S]
+  [[:V1 :V2]* :W]
+  
+
+  :==>
+   (mod-rels 'desire {:GOAL :G :AGENT :A :VALUE :VX} {:VALUE  :V2})
   )
 
 
