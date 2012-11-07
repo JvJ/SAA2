@@ -17,7 +17,80 @@ public class RDLTesting {
 		
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
+		rdl.loadFile("testrules.clj");
 		
+		
+		Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
+		
+		Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
+		
+		Relation goalmain=rdl.defRel("goalmain","GOAL", "SATISMAIN" ,"DECAYRATE");
+		
+		Relation goaldecay=rdl.defRel("goaldecay", "AGENT", "GOAL", "DECAY");		
+		
+		Relation desire=rdl.defRel("desire", "GOAL" ,"AGENT" ,"VALUE");
+		Relation agentgoal=rdl.defRel("agentgoal","GOAL", "AGENT" ,"STATE");
+		Relation agent = rdl.defRel("agent", "SELF");
+		
+		IPersistentMap[] results;
+		results = rdl.query(
+			agent.assertRel("SELF","jacky"),
+			agentgoal.assertRel("GOAL","money","AGENT","jacky","STATE",20),
+			goalsatistank.assertRel("AGENT","jacky","GOAL","money","VALUESATIS",40),
+			goalweight.assertRel("AGENT","jacky","GOAL","money","WEIGHT",3),
+			desire.assertRel("GOAL","money","AGENT","jacky","VALUE",10)
+				// Use assertRel to create a new instance of a relation
+				// The number of arguments MUST be even. And each pair should
+				// be of the form : FIELD, value.
+				//mother.assertRel("SELF", "sue", "CHILD", "kaylen"),
+				//mother.assertRel("SELF", "marion", "CHILD", "sue")
+			//goalweight.assertRel(args)
+				
+				);
+		results = rdl.query(
+				agent.term("SELF", ":X"),
+				agentgoal.term("GOAL",":G","AGENT",":X","STATE",":S"),
+				goalsatistank.term("AGENT",":X","GOAL",":G","VALUESATIS",":V"),
+				goalweight.term("AGENT",":X","GOAL",":G","WEIGHT",":W"),
+				desire.term("GOAL",":G","AGENT",":X","VALUE",":C")
+				
+				);
+		
+		System.out.println("Results from !!!!!!!!!!!!!!!!!!!!!!!: ");
+		for (IPersistentMap m : results){
+			
+			System.out.println(m);
+		}
+		
+		Rule test = rdl.defRule(
+				"test",
+				agent.term("SELF", ":X"),
+				agentgoal.term("GOAL",":G","AGENT",":X","STATE",":S"),
+				goalsatistank.term("AGENT",":X","GOAL",":G","VALUESATIS",":V"),
+				goalweight.term("AGENT",":X","GOAL",":G","WEIGHT",":W"),
+				desire.term("GOAL",":G","AGENT",":X","VALUE",":C"),
+				":==>",
+				// We've introduced a transformer, which goes from :V to :V2
+				// The action taken is to add 0.1
+				//rdl.trans(":V", ":V2", trans, 0.1),
+				//rdl.trans(":H", ":H", "(fn [x & r] (println \"HEY!\") x)"),
+			//	":==>",
+				// The effect of the rule is to modify the relation
+			    desire.modRel("GOAL",":G","AGENT",":X","VALUE",100.1)
+	
+	);
+		rdl.updateHead();
+		rdl.updateTail();
+		results = rdl.query(
+		        desire.term("GOAL",":G","AGENT",":X","VALUE",":C")
+				
+				);
+		
+		System.out.println("Results from??????????????????: ");
+		for (IPersistentMap m : results){
+			
+			System.out.println(m);
+		}
 		System.out.println("Keyword test: "+ rdl.trans(":X", ":Y", "+", 0.1));
 		
 		// Define a relation with appropriate fields
@@ -26,7 +99,7 @@ public class RDLTesting {
 		Relation grandmother = rdl.defRel("grandmother", "SELF", "GCHILD");
 		
 		// The query results are an array of persistent maps.
-		IPersistentMap[] results;
+		//IPersistentMap[] results;
 		
 		
 		results = rdl.query(
@@ -116,7 +189,7 @@ public class RDLTesting {
 		// And a smacking relationship
 		Relation smack = rdl.defRel("smack", "INST", "TARG");
 		
-		Relation agent = rdl.defRel("agent", "SELF");
+		//Relation agent = rdl.defRel("agent", "SELF");
 		
 		// Let's assert 2 facts
 		rdl.query(
