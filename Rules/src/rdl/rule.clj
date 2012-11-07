@@ -55,12 +55,11 @@ An argument that is a function returns itself."
                      _ (when-not (every? ifn? (vals arg))
                          (throw (Exception. "Every value in transformer map must be a function.")))]
                  (fn [hm]
-                   (println "Got arg: " hm)
                    (reduce
                      (fn [acc [k v]]
                        (assoc acc k (v acc)))
                      hm
-                     hm))); LEFTOFF: Test this!
+                     hm)))
     
     (ifn? arg) arg
     
@@ -110,11 +109,9 @@ An argument that is a function returns itself."
                ;; _ (println "res: " res)
                 
                 ;; Execute the filters!
-               _ (println "Beginning filter execution!")
                 newres (map (fn [r]
                               ;;(println "received r!" r)
                               (reduce #(%2 %1) r filters)) res)
-                _ (println "received result: " newres)
                 
                 ;;_ (println "filters: " filters)
                 ;;_ (println "newres: " newres)
