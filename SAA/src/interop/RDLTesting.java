@@ -14,6 +14,8 @@ public class RDLTesting {
 		
 		System.out.println("Keyword test: "+ rdl.trans(":X", ":Y", "+", 0.1));
 		
+		//PersistentVector v = new PersistentVector
+		
 		// Define a relation with appropriate fields
 		Relation mother = rdl.defRel("mother", "SELF", "CHILD");
 		

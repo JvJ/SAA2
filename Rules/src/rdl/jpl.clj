@@ -17,8 +17,6 @@
   "Get the class of a java array for later use."
   (class (into-array Object [])))
 
-;; TODO: Add ID's
-
 (def ^:dynamic *relations*
   "This is a mapping of predicate names to mappings of argument names to positions.
 Predicate names are represented as symbols.
@@ -59,6 +57,8 @@ Clojure terms are just lists (and lists of lists).
 Symbols map to atoms, and keywords map to variables."
   [val]
   (cond
+    ;; If it is a function, executerize it!
+    (fn? val) (clj-term (val))
     ;; First of all, if an element is a sequence, it is another term.
     (seq? val) (cond (empty? val) (throw (Exception. "Empty sequence not allowed!"))
                      :else (Compound. (convert-symbol (first val))

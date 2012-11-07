@@ -1,6 +1,7 @@
 (ns rdl.rule
   (:use [clojure.set]
-        [rdl.jpl]))
+        [rdl.jpl]
+        [misc.core]))
 
 (def ^:dynamic *rule-tags*
   "Maps of relations to sets of rules.
@@ -15,6 +16,10 @@ then those rules should be fired."
 (def ^:dynamic *update-fns*
   "Update functions queued up from rules."
   (atom ()))
+
+(def ^:dynamic *current-agent*
+  "This represents a global variable which can be re-bound"
+  :_)
 
 (defn clear
   "Clear the modified relations."
@@ -106,15 +111,13 @@ An argument that is a function returns itself."
         retfn
         (fn []
           (let [res (exec-query (clj-term precon))
-               ;; _ (println "res: " res)
                 
                 ;; Execute the filters!
                 newres (map (fn [r]
                               ;;(println "received r!" r)
                               (reduce #(%2 %1) r filters)) res)
                 
-                ;;_ (println "filters: " filters)
-                ;;_ (println "newres: " newres)
+
                 ;; We need to bind variables from the previous results
                 eq-clauses (map (fn [m]
                                   (for [[k v] m]
@@ -149,3 +152,15 @@ An argument that is a function returns itself."
   []
   (doseq [f @*update-fns*]
     (f)))
+
+(defn update-head-on-agent
+  "Updates head with a specific agent binding."
+  [agent]
+  (binding [*current-agent* agent]
+    (update-head)))
+
+(defn update-tail-on-agent
+  "Updates tail with a specific agent binding."
+  [agent]
+  (binding [*current-agent* agent]
+    (update-tail)))
