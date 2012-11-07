@@ -171,10 +171,13 @@ Symbols map to atoms, and keywords map to variables."
   "Modify a relation that satisfies a predicate."
   [rl propmap-1 propmap-2]
   (let [merged (merge propmap-1 propmap-2)
-        missing (c
+        fields (set (:unfields (@*relations* rl)))
+        missing (difference fields (set (keys merged)))
+        missing-vars (into {} (for [x missing]
+                                [x (keyword (gensym))]))
         compt (compose
-                (retract-rel rl propmap-1)
-                (assert-rel rl (merge propmap-1 propmap-2)))]
+                (retract-rel rl (merge propmap-1 missing-vars))
+                (assert-rel rl (merge merged missing-vars)))]
     (with-meta
       compt
       (assoc (meta compt) :modified #{{:relation rl
