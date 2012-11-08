@@ -6,7 +6,7 @@ import goal.*;
 public class RDStart {
 	public static void main(String[] args) {
 		RDL rdl = new RDL();
-		//rdl.loadFile("testRD.clj");
+		rdl.loadFile("testRD.clj");
 		RDAgent jack=new RDAgent();
 		GoalTest money=new GoalTest();
 		
