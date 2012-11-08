@@ -28,7 +28,12 @@ public class RDStart {
 		
 		IPersistentMap[] res = rdl.query(agent.term("SELF", "johnny"));
 		
-		rdl.get(res[0], "SELF");
+		// EXAMPLE IS HERE!!!
+		Relation emoRel = rdl.defRel(Emotion.class);
+		
+		
+		System.out.println("Emotion relation: "+ emoRel);
+		
 		
 		/*
 		Relation agent=rdl.defRel("agent",)

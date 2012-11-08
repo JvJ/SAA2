@@ -126,10 +126,10 @@ Symbols map to atoms, and keywords map to variables."
   "Adds a relation definition to the *relations* map."
   [nme keys]
   (let [;;keys (cons :_ID_ keys)
-        res (every? (fn [k]
-                      (= (str k) (.toUpperCase (str k))))  keys)
+        ;;res (every? (fn [k]
+        ;;              (= (str k) (.toUpperCase (str k))))  keys)
         ;; Keys need to be all in uppercase letters!
-        _ (when-not res (throw (Exception. "Error.  All keys must be upper-case.")))
+        ;;_ (when-not res (throw (Exception. "Error.  All keys must be upper-case.")))
         kns (apply hash-map (mapcat vector keys (range))) ;; represents a map of keys to indices
         ]
     ;; Define the dynamic relation
@@ -173,8 +173,9 @@ Symbols map to atoms, and keywords map to variables."
   (let [merged (merge propmap-1 propmap-2)
         fields (set (:unfields (@*relations* rl)))
         missing (difference fields (set (keys merged)))
+        ;; For all missing fields, generate a symbol prefixed with V_
         missing-vars (into {} (for [x missing]
-                                [x (keyword (gensym (str (name x) "_")))]))
+                                [x (keyword (gensym (str "V_" (name x) "_")))]))
         compt (compose
                 (retract-rel rl (merge propmap-1 missing-vars))
                 (assert-rel rl (merge merged missing-vars)))]
@@ -206,10 +207,6 @@ Symbols map to atoms, and keywords map to variables."
                   [(keyword k) (term-clj v)])
                 (into {})))
               ]
-              ;;(#(cond
-              ;;    (empty? %) 'F
-              ;;   (every? empty? %) 'T
-              ;;    :else %)))]
               ret))
 
 (defn query

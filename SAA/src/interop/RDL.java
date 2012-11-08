@@ -11,6 +11,14 @@ public class RDL extends RDLInterface{
 		super();
 	}
 	
+	public Relation defRel(String name){
+		return new Relation(super.defRel(name));
+	}
+	
+	public Relation defRel(Class c){
+		return new Relation(super.defRel(c));
+	}
+	
 	public Relation defRel(String name, Object... args){
 		
 		return new Relation(super.defRel(name, args));
