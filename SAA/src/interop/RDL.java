@@ -52,16 +52,39 @@ public class RDL extends RDLInterface{
 		
 		// First, convert the string to a keyword and look it up
 		// in the thingy.
-		Object ret = m.valAt(RT.keyword(null, s));
+		Object kw = m.valAt(RT.keyword(null, s));
 		
-		if (ret instanceof Symbol){
-			return ((Symbol)ret).getName();
+		return typeConvert(m.valAt(kw));
+		
+	}
+	
+	/**
+	 * Recursive type conversion function.
+	 * 
+	 * @param o An object to convert.
+	 * @return Converted objects.
+	 */
+	private Object typeConvert(Object o){
+		
+		if (o instanceof Symbol){
+			return ((Symbol)o).getName();
 		}
-		else if (ret instanceof Keyword){
-			return ((Keyword)ret).getName();
+		else if (o instanceof Keyword){
+			return ((Keyword)o).getName();
+		}
+		else if (o instanceof IPersistentVector){
+			
+			IPersistentVector vRet = (IPersistentVector)o;
+			Object[] ret = new Object[vRet.length()];
+			
+			for (int i = 0; i < vRet.length(); i++){
+				ret[i] = typeConvert(vRet.nth(i));
+			}
+			
+			return ret;
 		}
 		
-		return ret;
+		return o;
 		
 	}
 }

@@ -26,7 +26,9 @@ public class RDStart {
 		
 		Relation agentgoal=rdl.defRel("agentgoal","GOAL", "AGENT" ,"STATE");
 		
+		IPersistentMap[] res = rdl.query(agent.term("SELF", "johnny"));
 		
+		rdl.get(res[0], "SELF");
 		
 		/*
 		Relation agent=rdl.defRel("agent",)
