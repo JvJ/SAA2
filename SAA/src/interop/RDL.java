@@ -41,4 +41,27 @@ public class RDL extends RDLInterface{
 		
 		return RT.keyword(null, name);
 	}
+	
+	/**
+	 * Get a value from a map!
+	 * 
+	 * @param m A Clojure map
+	 * @param s A string key
+	 */
+	public Object get(IPersistentMap m, String s){
+		
+		// First, convert the string to a keyword and look it up
+		// in the thingy.
+		Object ret = m.valAt(RT.keyword(null, s));
+		
+		if (ret instanceof Symbol){
+			return ((Symbol)ret).getName();
+		}
+		else if (ret instanceof Keyword){
+			return ((Keyword)ret).getName();
+		}
+		
+		return ret;
+		
+	}
 }

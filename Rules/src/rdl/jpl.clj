@@ -174,7 +174,7 @@ Symbols map to atoms, and keywords map to variables."
         fields (set (:unfields (@*relations* rl)))
         missing (difference fields (set (keys merged)))
         missing-vars (into {} (for [x missing]
-                                [x (keyword (gensym))]))
+                                [x (keyword (gensym (str (name x) "_")))]))
         compt (compose
                 (retract-rel rl (merge propmap-1 missing-vars))
                 (assert-rel rl (merge merged missing-vars)))]
