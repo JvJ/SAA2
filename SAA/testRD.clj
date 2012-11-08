@@ -9,7 +9,7 @@
 (defrel 'desire[:GOAL :AGENT :VALUE])
 (defrel 'agentgoal[:GOAL :AGENT :STATE])
 
-(defrule desireassign 
+(defrule 'desireassign 
   ( rel 'agent{:SELF :A})
   ( rel 'agentgoal{:GOAL :G :AGENT :A :STATE :S})
   ( rel 'goalsatistank{:GOAL :G :AGENT :A :VALUESTATS :VS})
@@ -20,5 +20,5 @@
   [[:VN :VN2]* :W]
   :==>
   (mod-rels 'desire{:GOAL :G :AGENT :A :VALUE :V}{:VALUE :VN2})
-  )
+   )
 
