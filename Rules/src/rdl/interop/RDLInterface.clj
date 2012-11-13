@@ -9,6 +9,7 @@
     :methods [
               [loadFile [String] void]
               
+              [defRel [Class] rdl.interop.RDLRelation]
               [defRel [String] rdl.interop.RDLRelation]
               [defRel [String "[Ljava.lang.Object;"] rdl.interop.RDLRelation]
               
@@ -27,6 +28,27 @@
     :constructors {[] []}
     ))
 
+
+(defn unbean
+  "Just a helper function"
+  [clazz props]
+  (let [x (.newInstance clazz)
+        pmap (reduce (fn [m pd]
+                       (let [name (.getName pd)
+                             method (.getWriteMethod pd)]
+                         
+                         (if (and method (= 1 (alength (. method (getParameterTypes)))))
+                           (assoc m (keyword name) (fn [v] (. method (invoke x (into-array Object
+                                                                                 [v])))))
+                           m)))
+                     {}
+                     (.getPropertyDescriptors (java.beans.Introspector/getBeanInfo
+                                                clazz)))]
+    ;;(doseq [kv props]
+     ;; (println "OK!" [kv props])
+      ;;(((keyword (first kv)) pmap) (second kv)))
+    x))
+
 (defn -init
   "The initializer."
   []
@@ -39,9 +61,21 @@
 (defn -defRel
   "Evaluates a relation definition and returns a new Relation object."
   ([this st]
-    (let [evaled (eval (read-string st))]
-      (apply defrel evaled)
-      (rdl.interop.RDLRelation. (str (first evaled)))))
+    
+    ;; Looks like we have to handle dynamic dispatch on our own here!
+    (cond
+      ;; Is it a string?
+      (isa? (class st) String) (let [evaled (eval (read-string st))]
+                                 (apply defrel evaled)
+                                 (rdl.interop.RDLRelation. (str (first evaled))))
+      
+      ;; Is it a class?
+      (isa? (class st) Class) (let [class-name (apply str (last (partition-by #{\.} (.getName st))))
+                                    bean (bean (.newInstance st))
+                                    fields (remove #{:class} (keys bean))]
+                                (defrel (symbol class-name) fields)
+                                (rdl.interop.RDLRelation. class-name))))
+      
   ([this st args]
     (defrel (symbol st) (map keyword args))
     (rdl.interop.RDLRelation. st)))

@@ -11,6 +11,14 @@ public class RDL extends RDLInterface{
 		super();
 	}
 	
+	public Relation defRel(String name){
+		return new Relation(super.defRel(name));
+	}
+	
+	public Relation defRel(Class c){
+		return new Relation(super.defRel(c));
+	}
+	
 	public Relation defRel(String name, Object... args){
 		
 		return new Relation(super.defRel(name, args));
@@ -40,5 +48,49 @@ public class RDL extends RDLInterface{
 		}
 		
 		return RT.keyword(null, name);
+	}
+	
+	/**
+	 * Get a value from a map!
+	 * 
+	 * @param m A Clojure map
+	 * @param s A string key
+	 */
+	public Object get(IPersistentMap m, String s){
+        
+        // First, convert the string to a keyword and look it up
+        // in the thingy.
+        return typeConvert(m.valAt(var(s)));
+        
+}
+	
+	/**
+	 * Recursive type conversion function.
+	 * 
+	 * @param o An object to convert.
+	 * @return Converted objects.
+	 */
+	private Object typeConvert(Object o){
+		
+		if (o instanceof Symbol){
+			return ((Symbol)o).getName();
+		}
+		else if (o instanceof Keyword){
+			return ((Keyword)o).getName();
+		}
+		else if (o instanceof IPersistentVector){
+			
+			IPersistentVector vRet = (IPersistentVector)o;
+			Object[] ret = new Object[vRet.length()];
+			
+			for (int i = 0; i < vRet.length(); i++){
+				ret[i] = typeConvert(vRet.nth(i));
+			}
+			
+			return ret;
+		}
+		
+		return o;
+		
 	}
 }
