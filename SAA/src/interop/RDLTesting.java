@@ -4,6 +4,11 @@ import clojure.lang.*;
 
 public class RDLTesting {
 
+	
+	public static void reflectionTests(){
+		
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -21,6 +26,35 @@ public class RDLTesting {
 		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
 		IPersistentMap[] results;
 		Relation agent = rdl.defRel("agent", "SELF");
+		
+		// MAHOOR!  Look at this!
+		Relation emotion = rdl.defRel(Emotion.class);
+		
+		results = rdl.query(
+				emotion.assertRel(
+						"agent", "kaylen",
+						"anger", 1.0,
+						"sadness", 1.0,
+						"happiness", 1.0)
+				);
+		
+		results = rdl.query(
+				// This binds a variable to a full term
+				// if the term represents a relation, it's converted to a map
+				// Also, 
+					rdl.bindVar(":X", emotion.term("agent", ":A",
+													"anger", ":Ang",
+													"sadness", ":Sad",
+													"happiness", ":Hap"))
+					);
+		
+		// When it prints out, you can see a fully formed java object!!
+		for (IPersistentMap m : results){
+			
+			System.out.println("Here's the results! "+m);
+			
+		}
+		
 		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
 		
 		Relation goalmain=rdl.defRel("goalmain","GOAL", "SATISMAIN" ,"DECAYRATE");
@@ -29,7 +63,6 @@ public class RDLTesting {
 		
 		Relation desire=rdl.defRel("desire", "GOAL" ,"AGENT" ,"VALUE");
 		Relation agentgoal=rdl.defRel("agentgoal","GOAL", "AGENT" ,"STATE");
-		
 		
 		
 		results = rdl.query(

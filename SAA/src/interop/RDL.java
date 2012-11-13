@@ -60,9 +60,7 @@ public class RDL extends RDLInterface{
 		
 		// First, convert the string to a keyword and look it up
 		// in the thingy.
-		Object kw = m.valAt(RT.keyword(null, s));
-		
-		return typeConvert(m.valAt(kw));
+		return typeConvert(m.valAt(var(s)));
 		
 	}
 	

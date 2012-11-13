@@ -1,6 +1,7 @@
 (ns rdl.interop.RDLInterface
   (:use [rdl.jpl]
         [rdl.rule]
+        [rdl.reflect]
         [rdl.interop.RDLRelation]
         [rdl.interop.RDLRule])
   (:gen-class
@@ -12,6 +13,8 @@
               [defRel [Class] rdl.interop.RDLRelation]
               [defRel [String] rdl.interop.RDLRelation]
               [defRel [String "[Ljava.lang.Object;"] rdl.interop.RDLRelation]
+              
+              [bindVar [String Object] Object]
               
               [defRule [String] rdl.interop.RDLRule]
               [defRule [String "[Ljava.lang.Object;"] rdl.interop.RDLRule]
@@ -28,26 +31,6 @@
     :constructors {[] []}
     ))
 
-
-(defn unbean
-  "Just a helper function"
-  [clazz props]
-  (let [x (.newInstance clazz)
-        pmap (reduce (fn [m pd]
-                       (let [name (.getName pd)
-                             method (.getWriteMethod pd)]
-                         
-                         (if (and method (= 1 (alength (. method (getParameterTypes)))))
-                           (assoc m (keyword name) (fn [v] (. method (invoke x (into-array Object
-                                                                                 [v])))))
-                           m)))
-                     {}
-                     (.getPropertyDescriptors (java.beans.Introspector/getBeanInfo
-                                                clazz)))]
-    ;;(doseq [kv props]
-     ;; (println "OK!" [kv props])
-      ;;(((keyword (first kv)) pmap) (second kv)))
-    x))
 
 (defn -init
   "The initializer."
@@ -70,15 +53,20 @@
                                  (rdl.interop.RDLRelation. (str (first evaled))))
       
       ;; Is it a class?
-      (isa? (class st) Class) (let [class-name (apply str (last (partition-by #{\.} (.getName st))))
-                                    bean (bean (.newInstance st))
-                                    fields (remove #{:class} (keys bean))]
-                                (defrel (symbol class-name) fields)
-                                (rdl.interop.RDLRelation. class-name))))
+      (isa? (class st) Class) (let [class-sym (defrel-bean st)]
+                                (rdl.interop.RDLRelation. (name class-sym)))))
       
   ([this st args]
     (defrel (symbol st) (map keyword args))
     (rdl.interop.RDLRelation. st)))
+
+(defn -bindVar
+  "Binds a variable to a term and executes the term."
+  [this vr term]
+  (when-not (seq? term)
+    (throw (Exception. "Expected list.  Received " term)))
+  (bind-var (read-string vr) term))
+  
   
 (defn -defRule
   ([this st]
@@ -111,7 +99,7 @@
 an array of clojure maps"
   [this args]
   (into-array clojure.lang.IPersistentMap
-              (apply query args)))
+              (map bean-post-process (apply query args))))
 
 (defn -updateHead
   "Execute for the first pass of the update."

@@ -79,6 +79,21 @@ Symbols map to atoms, and keywords map to variables."
                         val " of type: " (class val)
                         " to prolog data type.")))))
 
+(defn term-map
+  "Convert a term representing a relation to a map representing the same relation."
+  [term]
+  (let [r (@*relations* (first term))
+        fk (filter keyword? term)
+        _ (if-not (empty? fk)
+            (throw
+              (Exception. (str "Unbound variables in term: " term))))]
+    (if-not r
+      nil
+      (with-meta
+        (reduce conj {}
+              (map vector (r :unfields) (rest term)))
+        {:rel-name (first term)}))))
+
 (defn term-clj-1
   "Converts Prolog data types to native Clojure data types."
   [val]
@@ -100,11 +115,14 @@ Symbols map to atoms, and keywords map to variables."
   (cond
     (seq? term) (let [f (first term)]
                   (cond
+                    (@*relations* f) (term-map term)
                     (= f '.) (vec (cons (cadr term) (term-clj-2 (caddr term))))
                     :else term))
     :else term))
   
 (def term-clj ($+ term-clj-2 term-clj-1))
+
+
 
 (defn compose
   "Turns a list of terms into a compound term."
@@ -120,6 +138,14 @@ Symbols map to atoms, and keywords map to variables."
            ;; Only execute set union if both elements are sets!
            #(if (and (set? %1) (set %2)) (clojure.set/union %1 %2) %2 )
            (map meta terms))))
+
+(defn bind-var
+  "Composes the execution of a term with the binding of a variable to the term."
+  [vr term]
+  (compose
+    term
+    (list '= vr term)))
+  
   
 (def query)
 (defn defrel
@@ -194,6 +220,7 @@ Symbols map to atoms, and keywords map to variables."
     (let [keys (set (.keySet jmap))]
       (apply hash-map
              (mapcat (fn [k] [k (.get jmap k)]) keys)))))
+  
 
 (defn exec-query
   "Execute a query term."
@@ -206,8 +233,8 @@ Symbols map to atoms, and keywords map to variables."
                 (for [[k v] m]
                   [(keyword k) (term-clj v)])
                 (into {})))
-              ]
-              ret))
+        ]
+    ret))
 
 (defn query
   "Compose the queries, transform them, then execute them.
