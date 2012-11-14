@@ -2,7 +2,7 @@
 (use 'rdl.rule)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defrel 'agent [:SELF])
-(defrel 'emotion [:SELF :ANGER :SADNESS :HAPPINESS])
+;;(defrel 'emotion [:SELF :ANGER :SADNESS :HAPPINESS])
 (defrel 'emotiontrsh [:SELF :ANGERTRESH :SADNESSTRESH :HAPPINESSTRESH])
 (defrel 'cry [:SELF])
 (defrule 'crying 
