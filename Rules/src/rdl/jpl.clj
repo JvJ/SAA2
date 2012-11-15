@@ -83,10 +83,12 @@ Symbols map to atoms, and keywords map to variables."
   "Convert a term representing a relation to a map representing the same relation."
   [term]
   (let [r (@*relations* (first term))
-        fk (filter keyword? term)
-        _ (if-not (empty? fk)
-            (throw
-              (Exception. (str "Unbound variables in term: " term))))]
+        ;; TODO: Throw an exception maybe at some point..?
+        ;;fk (filter keyword? term)
+        ;;_ (if-not (empty? fk)
+        ;;    (throw
+        ;;      (Exception. (str "Unbound variables in term: " term))))
+        ]
     (if-not r
       nil
       (with-meta
