@@ -1,5 +1,4 @@
 package interop;
-import RDTest.*;
 
 import clojure.lang.*;
 
@@ -21,25 +20,15 @@ public class RDLTesting {
 		}*/
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
-
-
-		
-		// MAHOOR!  Look at this!
 		Relation emotion = rdl.defRel(Emotion.class);
-		
 		rdl.loadFile("testRD.clj");
-
-		//rdl.loadFile("testrules.clj");
-
 		
 		//goal test=new goal();
 		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
 		IPersistentMap[] results;
 		//Relation agent = rdl.defRel("agent", "SELF");
-
-		Relation agent = new Relation("agent");
-
-
+		
+		// MAHOOR!  Look at this!
 		
 		
 		
@@ -48,44 +37,44 @@ public class RDLTesting {
 		mrEmo.setAnger(1.0);
 		mrEmo.setSadness(10.0);
 		mrEmo.setHappiness(1.0);
-		
-		results = rdl.query(
+				results = rdl.query(
 				emotion.assertObject(mrEmo)
 				);
 		
-		//rdl.updateHead();
-		//rdl.updateTail();
-		
-		System.out.println("Testing bindvar: "+rdl.bindVar(":Agent", agent.assertRel("SELF", ":A")));
-		
 		results = rdl.query(
-
-				// This binds a variable to a full term
-				// if the term represents a relation, it's converted to a map
-				// Also, 
-					rdl.bindVar(":X", emotion.term("agent", ":A",
-													"anger", ":Ang",
-													"sadness", ":Sad",
-													"happiness", ":Hap")),
-					agent.assertRel("SELF", ":A")//,
-				//	rdl.bindVar(":Agent", agent.term("SELF", ":A"))//,
-			//rdl.bindVar(":X", emotion.autoTerm())
-				);
+					rdl.bindVar(":X", emotion.autoTerm())
+					);
 		
-					
-
-		
-		Emotion resultEmotion = null;
 		// When it prints out, you can see a fully formed java object!!
 		for (IPersistentMap m : results){
 			
 			System.out.println("Here's the results! "+m);
 			
-			resultEmotion = (Emotion)rdl.get(m, ":X");
-			
+			//m.
+			//test.desire=( long)m.valAt(rdl.var("C"));
+			mrEmo = (Emotion)rdl.get(m, ":X");	
 		}
+		rdl.updateHead();
+		rdl.updateTail();
+	//	results = rdl.query(
+		//		emotion.modRel(mrEmo)
+		//		);
 		
-		System.out.println("Hey guys, I have an emotion object! "+resultEmotion);
+		results = rdl.query(
+				rdl.bindVar(":X", emotion.autoTerm())//,
+				//System.out.println(mrEmo.getHappiness())
+				);
+		
+		System.out.println(mrEmo.getHappiness());
+	// When it prints out, you can see a fully formed java object!!
+	for (IPersistentMap m : results){
+		
+		System.out.println("Here's the results! "+m);
+		//m.
+		//test.desire=( long)m.valAt(rdl.var("C"));
+		
+	}
+		//System.out.println(emotion.)
 		
 		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
 		

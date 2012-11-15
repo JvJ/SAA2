@@ -40,5 +40,6 @@
   [[:H :H2] / 2]
   (fn [m] (println "m" m))
   :==>
-  (mod-rels 'Emotion {:agent :A :happiness :H :anger :Ang, :sadness :Sad} {:happiness :H2}))
+  (mod-rels 'Emotion {:agent :A  :anger :Ang, :sadness :Sad} {:happiness :H2}))
+  ;;(mod-rels 'Emotion {:agent :A :happiness :H :anger :Ang, :sadness :Sad} {:happiness :H2}))
 
