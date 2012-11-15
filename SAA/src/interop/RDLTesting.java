@@ -1,9 +1,15 @@
 package interop;
+import RDTest.*;
 
 import clojure.lang.*;
 
 public class RDLTesting {
 
+	
+	public static void reflectionTests(){
+		
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -15,12 +21,56 @@ public class RDLTesting {
 		}*/
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
-		rdl.loadFile("testrules.clj");
+		
+		// MAHOOR!  Look at this!
+		Relation emotion = rdl.defRel(Emotion.class);
+		
+		rdl.loadFile("testRD.clj");
 		
 		//goal test=new goal();
 		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
 		IPersistentMap[] results;
-		Relation agent = rdl.defRel("agent", "SELF");
+		//Relation agent = rdl.defRel("agent", "SELF");
+		Relation agent = new Relation("agent");
+		
+		
+		results = rdl.query(
+				emotion.assertRel(
+						"agent", "kaylen",
+						"anger", 1.0,
+						"sadness", 1.0,
+						"happiness", 1.0)
+				);
+		
+		//rdl.updateHead();
+		//rdl.updateTail();
+		
+		System.out.println("Testing bindvar: "+rdl.bindVar(":Agent", agent.assertRel("SELF", ":A")));
+		
+		results = rdl.query(
+				// This binds a variable to a full term
+				// if the term represents a relation, it's converted to a map
+				// Also, 
+					rdl.bindVar(":X", emotion.term("agent", ":A",
+													"anger", ":Ang",
+													"sadness", ":Sad",
+													"happiness", ":Hap")),
+					agent.assertRel("SELF", ":A"),
+					rdl.bindVar(":Agent", agent.term("SELF", ":A"))
+				);
+		
+		Emotion resultEmotion = null;
+		// When it prints out, you can see a fully formed java object!!
+		for (IPersistentMap m : results){
+			
+			System.out.println("Here's the results! "+m);
+			
+			resultEmotion = (Emotion)rdl.get(m, ":X");
+			
+		}
+		
+		System.out.println("Hey guys, I have an emotion object! "+resultEmotion);
+		
 		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
 		
 		Relation goalmain=rdl.defRel("goalmain","GOAL", "SATISMAIN" ,"DECAYRATE");
@@ -29,7 +79,6 @@ public class RDLTesting {
 		
 		Relation desire=rdl.defRel("desire", "GOAL" ,"AGENT" ,"VALUE");
 		Relation agentgoal=rdl.defRel("agentgoal","GOAL", "AGENT" ,"STATE");
-		
 		
 		
 		results = rdl.query(

@@ -43,4 +43,8 @@ public class Emotion {
 		sadness = d;
 	}
 	
+	public String toString(){
+		return "Emotions of "+agent+": anger "+anger+", sadness "+sadness+", happiness "+happiness+".";
+	}
+	
 }

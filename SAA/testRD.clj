@@ -33,3 +33,12 @@
  :==>
  (mod-rels 'anger {:SELF :Y :VAL :V} {:VAL :V1}))
 
+(defrule 'happiness-half
+  (rel 'Emotion {:agent :A, :happiness :H, :anger :Ang, :sadness :Sad})
+  '(> :H 0)
+  :==>
+  [[:H :H2] / 2]
+  (fn [m] (println "m" m))
+  :==>
+  (mod-rels 'Emotion {:agent :A :happiness :H :anger :Ang, :sadness :Sad} {:happiness :H2}))
+
