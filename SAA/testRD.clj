@@ -21,17 +21,17 @@
   :==>
   (mod-rels 'desire{:GOAL :G :AGENT :A :VALUE :V}{:VALUE :VN2})
    )
-(defrel 'smack [:INST :TARG])
-(defrel 'anger [:SELF :VAL])
-(defrule
- 'getsmacked
- #(list '= :Y *current-agent*) ;; This line binds :Y to the current agent!
- (rel 'smack {:INST :X :TARG :Y})
- (rel 'anger {:SELF :Y :VAL :V})
- :==>
- [[:V :V1] + :V]
- :==>
- (mod-rels 'anger {:SELF :Y :VAL :V} {:VAL :V1}))
+;;(defrel 'smack [:INST :TARG])
+;;(defrel 'anger [:SELF :VAL])
+;;(defrule
+ ;;'getsmacked
+ ;;#(list '= :Y *current-agent*) ;; This line binds :Y to the current agent!
+ ;;(rel 'smack {:INST :X :TARG :Y})
+ ;;(rel 'anger {:SELF :Y :VAL :V})
+;; :==>
+;; [[:V :V1] + :V]
+;; :==>
+;; (mod-rels 'anger {:SELF :Y :VAL :V} {:VAL :V1}))
 
 (defrule 'happiness-half
   (rel 'Emotion {:agent :A, :happiness :H, :anger :Ang, :sadness :Sad})

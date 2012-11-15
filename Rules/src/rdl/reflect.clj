@@ -8,17 +8,28 @@
   "This is a map from relation names to classes."
   (atom {}))
 
+(defn bean-type-filter
+  "Filters types from java to clojure."
+  [obj]
+  (cond
+    (string? obj) (symbol obj)
+    :else obj))
+
 (defn clean-bean
   "Produces a bean from a java object with no class attribute."
   [obj]
-  (dissoc (bean obj) :class))
+  (->>
+    (for [[k v] (dissoc (bean obj) :class)]
+      [k (bean-type-filter v)])
+    (into {})))
   
 (defn short-name
   "Gets the short name of a class (after all the .s)."
   [clazz]
-  (apply str (last (partition-by #{\.} (.getName clazz))))) 
-  
+  (apply str (last (partition-by #{\.} (.getName clazz)))))   
+
 (defn type-filter
+  "Filters types from clojure to java."
   [typ obj]
   (cond
     (and (= typ Integer/TYPE) (integer? obj)) (Integer. obj)

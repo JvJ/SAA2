@@ -21,25 +21,36 @@ public class RDLTesting {
 		}*/
 		// First, generate an RDL instance
 		RDL rdl = new RDL();
+
+
 		
 		// MAHOOR!  Look at this!
 		Relation emotion = rdl.defRel(Emotion.class);
 		
 		rdl.loadFile("testRD.clj");
+
+		//rdl.loadFile("testrules.clj");
+
 		
 		//goal test=new goal();
 		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
 		IPersistentMap[] results;
 		//Relation agent = rdl.defRel("agent", "SELF");
+
 		Relation agent = new Relation("agent");
+
+
 		
+		
+		
+		Emotion mrEmo = new Emotion();
+		mrEmo.setAgent("kaylen");
+		mrEmo.setAnger(1.0);
+		mrEmo.setSadness(10.0);
+		mrEmo.setHappiness(1.0);
 		
 		results = rdl.query(
-				emotion.assertRel(
-						"agent", "kaylen",
-						"anger", 1.0,
-						"sadness", 1.0,
-						"happiness", 1.0)
+				emotion.assertObject(mrEmo)
 				);
 		
 		//rdl.updateHead();
@@ -48,6 +59,7 @@ public class RDLTesting {
 		System.out.println("Testing bindvar: "+rdl.bindVar(":Agent", agent.assertRel("SELF", ":A")));
 		
 		results = rdl.query(
+
 				// This binds a variable to a full term
 				// if the term represents a relation, it's converted to a map
 				// Also, 
@@ -55,9 +67,13 @@ public class RDLTesting {
 													"anger", ":Ang",
 													"sadness", ":Sad",
 													"happiness", ":Hap")),
-					agent.assertRel("SELF", ":A"),
-					rdl.bindVar(":Agent", agent.term("SELF", ":A"))
+					agent.assertRel("SELF", ":A")//,
+				//	rdl.bindVar(":Agent", agent.term("SELF", ":A"))//,
+			//rdl.bindVar(":X", emotion.autoTerm())
 				);
+		
+					
+
 		
 		Emotion resultEmotion = null;
 		// When it prints out, you can see a fully formed java object!!

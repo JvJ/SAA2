@@ -1,6 +1,7 @@
 (ns rdl.interop.RDLRelation
   (:use [rdl.jpl]
-        [rdl.rule])
+        [rdl.rule]
+        [rdl.reflect])
   (:gen-class
     :prefix "relt-"
     :init init
@@ -9,9 +10,11 @@
               [getName [] String]
               [getFields [] "[Ljava.lang.Object;"]
               [term [ "[Ljava.lang.Object;"] Object]
+              [autoTerm [] Object]
               [assertRel [ "[Ljava.lang.Object;"] Object]
               [retractRel [ "[Ljava.lang.Object;"] Object]
               [modRel ["[Ljava.lang.Object;"] Object]
+              [assertObject [Object] Object]
               ]
     :constructors {[String] []}))
 
@@ -70,5 +73,18 @@
       map1
       map2)))
 
+(defn relt-assertObject
+  [this obj]
+  (assert-rel (first (.state this)) 
+              (clean-bean obj)))
+
+(defn relt-autoTerm
+  [this]
+  (let [r-name (first (.state this))]
+    (rel r-name
+         (->>
+           (for [k ((@*relations* r-name) :unfields)]
+             [k (keyword (gensym (str "V_" (name k) "_")))])
+           (into {})))))
  
        
