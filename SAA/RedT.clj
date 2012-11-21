@@ -1,16 +1,11 @@
 (use 'rdl.jpl)
 (use 'rdl.rule)
 
-(defrel 'mother[:SELF :CHILD] )
-(defrel 'danger[:SELF])
-(defrel 'protect [:SELF :TARGET])
-(defrule 'protection
-  (rel 'mother{:SELF :S, :CHILD :C})
-  (rel 'danger{:SELF :C})
-  :==>
-   ;;(assert-rel 'cry {:SELF :X})
-  (assert-rel 'protect {:SELF :S :TARGET :C})
-  )
+(defrel 'mother[:SELF :CHILD])
+(defrel 'wolf[:SELF :WOLF])
+(defrel 'hunter[:SELF])
+(defrel 'hunger [:SELF :VALUE])
+(defrel 'searchfood[:SELF])
 (defrel 'agent [:SELF])
 (defrel 'goalweight [:GOAL :AGENT :WEIGHT])
 (defrel 'goalsatistank[:GOAL :AGENT :VALUESTATS] )
@@ -31,18 +26,6 @@
   :==>
   (mod-rels 'desire{:GOAL :G :AGENT :A :VALUE :V}{:VALUE :VN2})
    )
-;;(defrel 'smack [:INST :TARG])
-;;(defrel 'anger [:SELF :VAL])
-;;(defrule
- ;;'getsmacked
- ;;#(list '= :Y *current-agent*) ;; This line binds :Y to the current agent!
- ;;(rel 'smack {:INST :X :TARG :Y})
- ;;(rel 'anger {:SELF :Y :VAL :V})
-;; :==>
-;; [[:V :V1] + :V]
-;; :==>
-;; (mod-rels 'anger {:SELF :Y :VAL :V} {:VAL :V1}))
-
 (defrule 'happiness-half
   (rel 'Emotion {:agent :A, :happiness :H, :anger :Ang, :sadness :Sad})
   '(> :H 0)
@@ -50,6 +33,12 @@
   [[:H :H2] / 2]
   (fn [m] (println "m" m))
   :==>
-  (mod-rels 'Emotion {:agent :A  :anger :Ang, :sadness :Sad} {:happiness :H2}))
-  ;;(mod-rels 'Emotion {:agent :A :happiness :H :anger :Ang, :sadness :Sad} {:happiness :H2}))
-
+  (mod-rels 'Emotion {:agent :A  :anger :Ang, :sadness :Sad} {:happiness :H2})
+  )
+(defrule 'getFood
+  (rel 'hunger{:SELF :S :VALUE :V})
+  '(<v 20)
+  :==>
+  assert-rel 'searchfood {:SELF :S }
+  
+  )

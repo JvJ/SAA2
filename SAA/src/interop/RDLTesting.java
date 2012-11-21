@@ -22,10 +22,11 @@ public class RDLTesting {
 		RDL rdl = new RDL();
 		Relation emotion = rdl.defRel(Emotion.class);
 		rdl.loadFile("testRD.clj");
-		
+		IPersistentMap[] results;
+		/*
 		//goal test=new goal();
 		//Relation goalweight=rdl.defRel("goalweight" ,"AGENT" ,"GOAL" ,"WEIGHT");
-		IPersistentMap[] results;
+		
 		//Relation agent = rdl.defRel("agent", "SELF");
 		
 		// MAHOOR!  Look at this!
@@ -52,7 +53,8 @@ public class RDLTesting {
 			
 			//m.
 			//test.desire=( long)m.valAt(rdl.var("C"));
-			mrEmo = (Emotion)rdl.get(m, ":X");	
+		//	mrEmo = (Emotion)rdl.get(m, ":X");	
+			//mrEmo = (Emotion)rdl.get(m, ":X");
 		}
 		rdl.updateHead();
 		rdl.updateTail();
@@ -63,17 +65,21 @@ public class RDLTesting {
 		results = rdl.query(
 				rdl.bindVar(":X", emotion.autoTerm())//,
 				//System.out.println(mrEmo.getHappiness())
+			
 				);
+		
 		
 		System.out.println(mrEmo.getHappiness());
 	// When it prints out, you can see a fully formed java object!!
 	for (IPersistentMap m : results){
 		
 		System.out.println("Here's the results! "+m);
+	//	mrEmo = (Emotion)rdl.get(m, ":X");
 		//m.
 		//test.desire=( long)m.valAt(rdl.var("C"));
 		
 	}
+	System.out.println(mrEmo);
 		//System.out.println(emotion.)
 		
 		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");
@@ -313,6 +319,43 @@ public class RDLTesting {
 			//m.
 		}
 		*/
+		Relation mother = rdl.defRel("mother", "SELF", "CHILD");
+		Relation danger=rdl.defRel("danger","SELF");
+		Relation protect =rdl.defRel("protect","SELF","TARGET");
+		results = rdl.query(
+				// Use assertRel to create a new instance of a relation
+				// The number of arguments MUST be even. And each pair should
+				// be of the form : FIELD, value.
+				mother.assertRel("SELF", "sue", "CHILD", "kaylen"),
+				//mother.assertRel("SELF", "marion", "CHILD", "sue"),
+				danger.assertRel("SELF","kaylen")
+				);
+		
+		results = rdl.query(
+				mother.term("SELF", ":X", "CHILD", ":Y"),
+				danger.term("SELF",":Z")
+				
+				);
+		for (IPersistentMap m : results){
+			System.out.println(m);
+		}
+		rdl.updateHead();
+		rdl.updateTail();
+		System.out.println("*************");
+		results = rdl.query(
+			//mother.term("SELF", ":X", "CHILD", ":Y"),
+				//danger.term("SELF",":X")//,
+				protect.term("SELF",":J","TARGET",":K")
+				);
+		for (IPersistentMap m : results){
+			System.out.println(m);
+		}
+		System.out.println("After the rule has executed: ");
+		//for (IPersistentMap m : results){
+		//	System.out.println(m);
+		//}/*
+	
+//	*/
 	}
 
 }
