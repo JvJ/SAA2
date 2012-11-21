@@ -13,6 +13,9 @@ public class RDLTesting {
 	 * @param args
 	 */
 	
+	// Notes:
+	// Asynchronous planning!6
+	
 	public static void main(String[] args) {
 	/*	class goal{
 			
@@ -37,8 +40,16 @@ public class RDLTesting {
 		mrEmo.setSadness(10.0);
 		mrEmo.setHappiness(1.0);
 		
+		System.out.println("Here is the original object: "+mrEmo);
+		
 		results = rdl.query(
 				emotion.assertObject(mrEmo)
+				);
+		
+		results = rdl.query(
+				emotion.modRel("agent", "kaylen",
+						":==>",
+						"anger", 2.0)
 				);
 		
 		results = rdl.query(
@@ -50,6 +61,9 @@ public class RDLTesting {
 			
 			System.out.println("Here's the results! "+m);
 			
+			System.out.println("\nHere is what kind of object we get back!!");
+			
+			System.out.println(rdl.get(m, ":X"));
 		}
 		
 		/*Relation 	goalsatistank=rdl.defRel("goalsatistank","AGENT" ,"GOAL" ,"VALUESATIS");

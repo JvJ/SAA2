@@ -84,10 +84,10 @@ Symbols map to atoms, and keywords map to variables."
   [term]
   (let [r (@*relations* (first term))
         ;; TODO: Throw an exception maybe at some point..?
-        ;;fk (filter keyword? term)
-        ;;_ (if-not (empty? fk)
-        ;;    (throw
-        ;;      (Exception. (str "Unbound variables in term: " term))))
+        fk (filter keyword? term)
+        _ (if-not (empty? fk)
+            (throw
+              (Exception. (str "Unbound variables in term: " term))))
         ]
     (if-not r
       nil
@@ -240,7 +240,7 @@ Symbols map to atoms, and keywords map to variables."
 
 (defn query
   "Compose the queries, transform them, then execute them.
-Return the meta of the composed query"
+Keep the meta of the composed query"
   [& terms]
   (let [compt (apply compose terms)
         met (meta compt)
