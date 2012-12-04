@@ -5,7 +5,7 @@ import goapI.*;
 //import goapI.GoapWorldFact;
 import java.util.*;
 
-public class Cell {
+public class Cell implements TreeEl{
 	String name;
 	boolean leaf=false;
 	GoapWorldFact fact;
@@ -96,6 +96,36 @@ public class Cell {
 		}
 		
 		System.out.println("end of cccccccccccccell"+getName());
+		
+	}
+	
+	public void printTraverse(){
+		printTraverse(0);
+	}
+	
+	public void printTraverse(int indentation){
+		for(int i = 0; i < indentation; i++) System.out.print("\t");
+		System.out.println("<Cell: "+name+">");
+		
+		for (Link l : link){
+			l.printTraverse(indentation+1);
+		}
+	}
+	
+	public ArrayList<LinkedList<TreeEl>> pathTraverse(LinkedList<TreeEl> rootList){
+		
+		// Btw this is bullshit!
+		LinkedList<TreeEl> newRoot = (LinkedList<TreeEl>)rootList.clone();
+				
+		newRoot.addFirst(this);
+				
+		ArrayList<LinkedList<TreeEl>> ret = new ArrayList<LinkedList<TreeEl>>();
+				
+		for (Link c : link){
+			ret.addAll(c.pathTraverse(newRoot));
+		}
+				
+		return ret;
 		
 	}
 }

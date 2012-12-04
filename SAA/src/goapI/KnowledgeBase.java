@@ -36,24 +36,24 @@ public class KnowledgeBase {
 		GoapWorldFact fact1=new GoapWorldFact("KweaponIsLoaded",true);
 		putFactInKb(fact1);
 		//////////////
-		//GoapWorldFact fact1plusplus=new GoapWorldFact("KweaponIsLoaded++",true);
-		//putFactInKb(fact1plusplus);
+		GoapWorldFact fact1plusplus=new GoapWorldFact("KweaponIsLoaded++",true);
+		putFactInKb(fact1plusplus);
 	///////////////////////////////
 		
 		GoapWorldFact fact2=new GoapWorldFact("KTargetIsDead",true);
 		putFactInKb(fact2);
-		//LinkedList<GoapWorldFact> test=new LinkedList<GoapWorldFact>();
-		//test.add(fact1);
-		//test.add(fact1plusplus);
+		LinkedList<GoapWorldFact> test=new LinkedList<GoapWorldFact>();
+		test.add(fact1);
+		test.add(fact1plusplus);
 		GoapAction actionAttack=new GoapAction("actionAttack",fact1,fact2);
 		putActionInKb(actionAttack);
 		
 	//	GoapAction actionAttack=new GoapAction("actionAttack",fact1plusplus,fact2);
-		//putActionInKb(actionAttack);
+	//	putActionInKb(actionAttack);
 		
 		//////////////////////
-	//	GoapAction actionAttackplusplus=new GoapAction("actionAttack+++",fact1plusplus,fact2);
-	//	putActionInKb(actionAttackplusplus);
+		GoapAction actionAttackplusplus=new GoapAction("actionAttack+++",fact1plusplus,fact2);
+		putActionInKb(actionAttackplusplus);
 ////////////////////////
 		GoapWorldFact fact3=new GoapWorldFact("KweaponIsArmed",true);
 		putFactInKb(fact3);

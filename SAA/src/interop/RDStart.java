@@ -1,5 +1,6 @@
 package interop;
 import RDTest.*;
+import RDTest.GoalTest;
 import clojure.lang.*;
 import agent.*;
 import goal.*;

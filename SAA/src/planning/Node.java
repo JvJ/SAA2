@@ -3,7 +3,7 @@ import goapI.*;
 
 
 import java.util.*;
-public class Node {
+public class Node implements TreeEl{
 	public String name="";
 	public int level;
 	boolean leaf =false;
@@ -90,4 +90,43 @@ public class Node {
 	
 	}
 	
+	public void printTraverse(){
+		printTraverse(0);
+	}
+	
+	public void printTraverse(int indentation){
+		
+		for(int i = 0; i < indentation; i++) System.out.print("\t");
+		System.out.println("<Node: "+name+", "+leaf+">");
+		
+		if (leaf) return;
+		
+		for (Cell c : cells){
+			c.printTraverse(indentation + 1);
+		}
+		
+	}
+	
+	
+	public ArrayList<LinkedList<TreeEl>> pathTraverse(LinkedList<TreeEl> rootList){
+		
+		// Btw this is bullshit!
+		LinkedList<TreeEl> newRoot = (LinkedList<TreeEl>)rootList.clone();
+		
+		newRoot.addFirst(this);
+		
+		ArrayList<LinkedList<TreeEl>> ret =
+				new ArrayList<LinkedList<TreeEl>>();
+		
+		if (leaf){
+			ret.add(newRoot);
+			return ret;
+		}
+		
+		for (Cell c : cells){
+			ret.addAll(c.pathTraverse(newRoot));
+		}
+		
+		return ret;
+	}
 }

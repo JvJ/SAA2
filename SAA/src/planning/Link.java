@@ -3,7 +3,7 @@ package planning;
 import goapI.*;
 import java.util.*;
 
-public class Link {
+public class Link implements TreeEl{
 	public String actName;
 	public GoapAction act;
 	public Node kid;
@@ -51,4 +51,24 @@ public class Link {
 		System.out.println("LLLLLLLLLLLLLL"+getName());
 	}
 
+	public void printTraverse(){
+		printTraverse(0);
+	}
+	
+	public void printTraverse(int indentation){
+		for(int i = 0; i < indentation; i++) System.out.print("\t");
+		System.out.println("<Link: "+actName+">");
+		if (kid != null){
+			kid.printTraverse(indentation);
+		}
+	}
+	
+	public ArrayList<LinkedList<TreeEl>> pathTraverse(LinkedList<TreeEl> rootList){
+		// Btw this is bullshit!
+		LinkedList<TreeEl> newRoot = (LinkedList<TreeEl>)rootList.clone();
+				
+		newRoot.addFirst(this);
+		
+		return kid.pathTraverse(newRoot);
+	}
 }
