@@ -1,19 +1,30 @@
 (use 'rdl.jpl)
 (use 'rdl.rule)
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defrel 'agent [:SELF])
 ;;(defrel 'emotion [:SELF :ANGER :SADNESS :HAPPINESS])
 (defrel 'emotiontrsh [:SELF :ANGERTRESH :SADNESSTRESH :HAPPINESSTRESH])
 (defrel 'cry [:SELF])
+
 (defrule 'crying 
   (rel 'agent{:SELF :X})
-  (rel 'emotion {:SELF :X :ANGER :C :SADNESS :Z :HAPPINESS :S})
+  (rel 'Emotion {:agent :X :anger :C :sadness :Z :happiness :S})
   (rel 'emotiontrsh {:SELF :X :ANGERTRESH :E :SADNESSTRESH :Q :HAPPINESSTRESH :D})
   '(< :Q :Z)
   :==>
   (assert-rel 'cry {:SELF :X}))
 (defrel 'smiling [:SELF])
-
+(defrule 'halfhappy
+  (rel 'Emotion{:agent :X :anger :C :sadness :Z :happiness :S})
+   :==>
+   [[:S :S2] / 2]
+   :==>
+   (mod-rels 'Emotion{:agent :X}
+             {:happiness :S2})
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

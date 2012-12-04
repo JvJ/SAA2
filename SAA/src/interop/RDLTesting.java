@@ -32,7 +32,7 @@ public class RDLTesting {
 		
 		// MAHOOR!  Look at this!
 		Relation emotion = rdl.defRel(Emotion.class);
-		
+		rdl.loadFile("testrules.clj");
 		
 		Emotion mrEmo = new Emotion();
 		mrEmo.setAgent("kaylen");
@@ -51,6 +51,9 @@ public class RDLTesting {
 						":==>",
 						"anger", 2.0)
 				);
+		
+		rdl.updateHead();
+		rdl.updateTail();
 		
 		results = rdl.query(
 					rdl.bindVar(":X", emotion.autoTerm())

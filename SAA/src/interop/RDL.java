@@ -57,12 +57,17 @@ public class RDL extends RDLInterface{
 	 * @param s A string key
 	 */
 	public Object get(IPersistentMap m, String s){
+
+        
+        // First, convert the string to a keyword and look it up
+        // in the thingy.
+        return typeConvert(m.valAt(var(s)));
+        
+}
 		
 		// First, convert the string to a keyword and look it up
 		// in the thingy.
-		return typeConvert(m.valAt(var(s)));
-		
-	}
+
 	
 	/**
 	 * Recursive type conversion function.

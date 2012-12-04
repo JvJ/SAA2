@@ -1,4 +1,5 @@
 package agent;
+import RDTest.GoalTest;
 import goal.*;
 
 public class RDAgent {
